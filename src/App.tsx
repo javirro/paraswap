@@ -1,24 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react"
+import { EIP1193Provider } from "./types/Metamask"
+import { hexToDecimal } from "./utils/numberConversion"
+import DiscoverWalletProviders from "./components/DetectWallets/DetectWallets"
+
+import "./App.css"
+
 
 function App() {
+  const [provider, setProvider] = useState<EIP1193Provider>()
+  const [userAccount, setUserAccount] = useState<string>("")
+  const [chainId, setChainId] = useState<string>("56")
+  const [openWalletModal, setOpenWalletModal] = useState<boolean>(true)
+  provider?.on?.("accountsChanged", (accounts: any) => {
+    setUserAccount(accounts[0]);
+  });
+
+  provider?.on?.("chainChanged", (hexChainId: any) => {
+    const decChainId: string = hexToDecimal(hexChainId).toString();
+    setChainId(decChainId);
+  });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {openWalletModal && (
+        <DiscoverWalletProviders
+          setOpenWalletModal={setOpenWalletModal}
+          setProvider={setProvider}
+          setUserAccount={setUserAccount}
+          userAccount={userAccount}
+          chaindId={chainId}
+        />
+      )}
     </div>
   );
 }

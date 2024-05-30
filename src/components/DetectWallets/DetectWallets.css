@@ -1,0 +1,58 @@
+#modal-detection {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+.wallets-detection {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 500px;
+  height: 300px;
+  background-color: rgb(227, 119, 42);
+  border-radius: 20px;
+}
+
+.wallets-detection > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.wallets-detection > div button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 3px solid var(--darkest);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.wallets-detection > div img {
+  width: 32px;
+}
+
+.wallets-detection > div strong {
+  font-size: 18px;
+}
+
+.wallets-detection > div span {
+  font-size: 16px;
+  font-weight: bold;
+}
