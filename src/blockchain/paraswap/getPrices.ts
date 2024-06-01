@@ -20,11 +20,15 @@ export const getParaswapPrices = async ({ fromAddress, destAddress, amountWei, f
     destDecimals: destDecimals,
     side: "SELL",
     network: "56",
+    options: {
+      includeContractMethods: "multiswap",
+    },
   }
   const url = new URL(baseURL)
   Object.keys(params).forEach(key => {
     const param = params[key as keyof typeof params]
-    url.searchParams.append(key, param)
+    const paramValue = typeof param === "object" ? JSON.stringify(param) : param.toString()
+    url.searchParams.append(key, paramValue)
   })
 
   const response = await fetch(url.toString())
@@ -37,12 +41,20 @@ export const prepareDataForParaswapPrices = async (from: string, to: string, amo
   const fromAddress: string = tokenNameToAddress(from)
   const destAddress: string = tokenNameToAddress(to)
   const web3 = new Web3("https://binance.llamarpc.com")
-  const tokenFromContract = new web3.eth.Contract(ABIS.token, fromAddress)
-  const tokenToContract = new web3.eth.Contract(ABIS.token, destAddress)
-  const fromDecimals: string = (await tokenFromContract.methods.decimals().call() as BigInt).toString()
-  const destDecimals: string = (await tokenToContract.methods.decimals().call() as BigInt).toString()
+
+  let fromDecimals, destDecimals: string
+  if (from === "bnb") fromDecimals = "18"
+  else {
+    const tokenFromContract = new web3.eth.Contract(ABIS.token, fromAddress)
+    fromDecimals = ((await tokenFromContract.methods.decimals().call()) as BigInt).toString()
+  }
+  if (to === "bnb") destDecimals = "18"
+  else {
+    const tokenToContract = new web3.eth.Contract(ABIS.token, destAddress)
+    destDecimals = ((await tokenToContract.methods.decimals().call()) as BigInt).toString()
+  }
   const amountWei: string = etherToWeiConverter(amountEth, fromDecimals)
-  return { fromAddress,  destAddress, amountWei, fromDecimals, destDecimals }
+  return { fromAddress, destAddress, amountWei, fromDecimals, destDecimals }
 }
 
 export const calculateParaswapTx = async (from: string, to: string, amountEth: string) => {

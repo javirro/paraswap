@@ -17,3 +17,10 @@ export interface Balance {
   weiBalance: string
   ethBalance: string
 }
+
+export enum ErrorType {
+  approve = "Error approving token",
+  route = "Error getting swap route",
+  buildTx = "Error building transaction",
+  sendTx = "Error sending transaction",
+}

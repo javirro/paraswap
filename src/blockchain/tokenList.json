@@ -1,7 +1,8 @@
 [
   {
     "id" : "bnb",
-    "address": "0x0000000000000000000000000000000000000000"
+    "address": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    "zeroAddress": "0x0000000000000000000000000000000000000000"
   },
   {
     "id" : "wbnb",

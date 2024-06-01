@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Balance } from "../../types/blockchain"
+import { Balance, ErrorType } from "../../types/blockchain"
 import InputForm from "../Form/InputForm"
 import { EIP1193Provider } from "../../types/Metamask"
 import { getBalance } from "../../blockchain/walletFunctions/getBalance"
@@ -7,15 +7,17 @@ import OutputForm from "../Form/OutputForm"
 import { calculateParaswapTx } from "../../blockchain/paraswap/getPrices"
 import { weiToEtherConverter } from "../../blockchain/tokenHelper"
 import { approveToken, getAllowance } from "../../blockchain/approveAllowance"
+import sendTransaction, { SendTransactionParams, swapWithParaswap } from "../../blockchain/paraswap/sendTransaction"
+import { TransactionReceipt } from "web3"
 
 import "./Swap.css"
-import sendTransaction, { SendTransactionParams, swapWithParaswap } from "../../blockchain/paraswap/sendTransaction"
 
 interface SwapProps {
   provider: EIP1193Provider
   userAccount: string
   chainId: string
 }
+
 const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
   const [balance, setBalance] = useState<Balance>({ weiBalance: "", ethBalance: "" })
   const [amount, setAmount] = useState<string>("")
@@ -23,14 +25,21 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
   const [to, setTo] = useState<string>("usdt")
   const [preview, setPreview] = useState<string>("Estimating amount ....")
   const [priceRoute, setPriceRoute] = useState<any>(undefined)
+  const [txHash, setTxHash] = useState<string>("")
+  const [error, setError] = useState<ErrorType | undefined>(undefined)
 
   const handleMaxAmount = () => {
     setAmount(balance?.ethBalance)
   }
 
   useEffect(() => {
+    setError(undefined)
     setAmount("0")
   }, [from])
+
+  useEffect(() => {
+    setError(undefined)
+  }, [to])
 
   useEffect(() => {
     if (!provider) return
@@ -52,6 +61,8 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
       }
     } catch (error) {
       console.error("Error approving token", error)
+      setError(ErrorType.approve)
+      return
     }
 
     let txInfo
@@ -66,17 +77,20 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
         priceRoute,
         slippage: 250,
       }
-      console.log("Sending transaction", txParams)
       txInfo = await sendTransaction(txParams)
     } catch (error) {
       console.error("Error getting data for tx", error)
+      setError(ErrorType.buildTx)
+      return
     }
 
     try {
-      const tx = await swapWithParaswap(txInfo.data, txInfo.to, provider, userAccount)
-      console.log("Transaction sent", tx)
+      const tx: TransactionReceipt = await swapWithParaswap(txInfo.data, txInfo.to, provider, userAccount)
+      setTxHash(tx.transactionHash.toString())
     } catch (error) {
+      setError(ErrorType.sendTx)
       console.error("Error sending transaction", error)
+      return
     }
   }
 
@@ -90,7 +104,10 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
         if (!destDecimals || !destAmountWei) return
         setPreview(weiToEtherConverter(destAmountWei, destDecimals))
       })
-      .catch(e => console.error(e))
+      .catch(e => {
+        console.error(e)
+        setError(ErrorType.route)
+      })
   }, [from, amount, to])
 
   return (
@@ -103,6 +120,15 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
         <button className="swap-btn" onClick={sendTx} disabled={!priceRoute}>
           SWAP
         </button>
+        {txHash && txHash !== "" && (
+          <section className="tx-hash">
+            <p>Transaction Hash:</p>
+            <a href={`https://bscscan.com/tx/${txHash}`} target="_blank" rel="noreferrer">
+              {txHash}
+            </a>
+          </section>
+        )}
+        {error && <span className="error">{error}</span>}
       </section>
     </section>
   )
