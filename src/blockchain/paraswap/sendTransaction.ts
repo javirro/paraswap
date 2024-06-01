@@ -1,6 +1,7 @@
 import { Web3 } from "web3"
 import { EIP1193Provider } from "../../types/Metamask"
 import { GetParaswapPricesParams } from "./getPrices"
+import { TxInfoParaswap } from "../../types/paraswap"
 
 export interface SendTransactionParams extends GetParaswapPricesParams {
   userAddress: string
@@ -16,7 +17,7 @@ const SendTransaction = async ({
   userAddress,
   priceRoute,
   slippage,
-}: SendTransactionParams) => {
+}: SendTransactionParams): Promise<TxInfoParaswap> => {
   const baseURL = "https://apiv5.paraswap.io/transactions/56"
   const body = {
     srcToken: fromAddress,
@@ -39,22 +40,22 @@ const SendTransaction = async ({
   }
   const response = await fetch(baseURL, options)
   if (response.status !== 200) throw new Error("Error sending transaction")
-  const data = await response.json()
+  const data: TxInfoParaswap = await response.json()
   return data
 }
 
 export default SendTransaction
 
-export const swapWithParaswap = async (data: string, paraswapContractAddress: string, provider: EIP1193Provider, userAddress: string) => {
+export const swapWithParaswap = async (txInfo: TxInfoParaswap, provider: EIP1193Provider) => {
   const web3 = new Web3(provider)
-  const gasPrice = await web3.eth.getGasPrice()
+  const { data, from: userAddress, value, to, gas, gasPrice } = txInfo
   const tx = await web3.eth.sendTransaction({
     from: userAddress.toLowerCase(),
-    to: paraswapContractAddress.toLowerCase(),
+    to: to.toLowerCase(),
     data,
-    value: 0,
+    value: value !== "0" ? value : 0,
     gasPrice,
-    gas: 1000000,
+    gas,
   })
   return tx
 }

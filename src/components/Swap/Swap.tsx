@@ -11,6 +11,7 @@ import sendTransaction, { SendTransactionParams, swapWithParaswap } from "../../
 import { TransactionReceipt } from "web3"
 
 import "./Swap.css"
+import { TxInfoParaswap } from "../../types/paraswap"
 
 interface SwapProps {
   provider: EIP1193Provider
@@ -36,11 +37,13 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
     setError(undefined)
     setAmount("0")
     setPreview("Estimating amount ....")
+    setTxHash("")
   }, [from])
 
   useEffect(() => {
     setError(undefined)
     setPreview("Estimating amount ....")
+    setTxHash("")
   }, [to])
 
   useEffect(() => {
@@ -69,7 +72,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
       }
     }
 
-    let txInfo
+    let txInfo: TxInfoParaswap
     try {
       const txParams: SendTransactionParams = {
         userAddress: userAccount,
@@ -89,12 +92,17 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
     }
 
     try {
-      const tx: TransactionReceipt = await swapWithParaswap(txInfo.data, txInfo.to, provider, userAccount)
+      
+      const tx: TransactionReceipt = await swapWithParaswap(txInfo, provider)
       setTxHash(tx.transactionHash.toString())
     } catch (error) {
       setError(ErrorType.sendTx)
       console.error("Error sending transaction", error)
       return
+    } finally {
+      setPriceRoute(undefined)
+      setAmount("0")
+      setPreview("0")
     }
   }
 
