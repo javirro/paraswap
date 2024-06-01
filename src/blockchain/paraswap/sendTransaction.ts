@@ -1,3 +1,6 @@
+import { Web3 } from "web3";
+import { EIP1193Provider } from "../../types/Metamask";
+import { ABIS } from "../abis";
 import { GetParaswapPricesParams } from "./getPrices";
 
 export interface SendTransactionParams extends GetParaswapPricesParams {
@@ -41,3 +44,13 @@ const SendTransaction = async ({
 };
 
 export default SendTransaction;
+
+
+export const swapWithParaswap = async (data: string, paraswapContractAddress: string,  provider: EIP1193Provider, userAddress: string) => {
+  console.log({data, paraswapContractAddress,  userAddress})
+  const web3 = new Web3(provider);
+  const paraswapContract = new web3.eth.Contract(ABIS.paraswapContract, paraswapContractAddress)
+  const tx = await paraswapContract.methods.simpleSwap(data).send({ from: userAddress })
+  return tx;
+
+}

@@ -37,7 +37,7 @@ const InputForm = ({ amount, setAmount, userAccount, from, setFrom, handleMaxAmo
           ))}
         </select>
         <input type="text" placeholder="0.0" value={amount} onChange={handleAmountChange} />
-        <button className="max" onClick={() => handleMaxAmount()} disabled={!userAccount}>
+        <button className="max" type="button" onClick={() => handleMaxAmount()} disabled={!userAccount}>
           MAX
         </button>
       </div>

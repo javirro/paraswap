@@ -5,9 +5,10 @@ interface OutputFormProps {
   to: string
   from: string
   setTo: (from: string) => void
+  preview: string
 }
 
-const OutputForm = ({ from, setTo, to }: OutputFormProps) => {
+const OutputForm = ({ from, setTo, to, preview }: OutputFormProps) => {
   const tokensNames: string[] = tokenList.map(t => t.id)
   const filteredTokens: string[] = tokensNames.filter(t => t.toLowerCase() !== from.toLowerCase())
   const handleToChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -25,7 +26,7 @@ const OutputForm = ({ from, setTo, to }: OutputFormProps) => {
             </option>
           ))}
         </select>
-        <span className="preview">Estimating amount ....</span>
+        <span className="preview">{preview}</span>
       </div>
     </section>
   )

@@ -8,9 +8,9 @@ export const approveToken = async (provider: EIP1193Provider, userAddress: strin
   await tokenContract.methods.approve(spender, amountWei).send({ from: userAddress })
 }
 
-export const getAllowance = async (provider: EIP1193Provider, userAddress: string, spender: string, tokenAddress: string): Promise<number> => {
+export const getAllowance = async (provider: EIP1193Provider, userAddress: string, spender: string, tokenAddress: string): Promise<string> => {
   const web3 = new Web3(provider)
   const tokenContract = new web3.eth.Contract(ABIS.token, tokenAddress)
-  const allowance: number = await tokenContract.methods.allowance(userAddress, spender).call()
+  const allowance: string = (await tokenContract.methods.allowance(userAddress, spender).call() as BigInt).toString()
   return allowance
 }
