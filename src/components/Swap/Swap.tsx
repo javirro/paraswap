@@ -5,6 +5,7 @@ import { EIP1193Provider } from "../../types/Metamask"
 import { getBalance } from "../../blockchain/walletFunctions/getBalance"
 import "./Swap.css"
 import OutputForm from "../Form/OutputForm"
+import { calculateParaswapTx } from "../../blockchain/paraswap/getPrices"
 
 interface SwapProps {
   provider: EIP1193Provider
@@ -22,6 +23,10 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
   }
 
   useEffect(() => {
+    setAmount("0")
+  }, [from])
+
+  useEffect(() => {
     if (!provider) return
     getBalance(provider, from, userAccount, chainId)
       .then((b: Balance) => setBalance(b))
@@ -30,9 +35,20 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
       })
   }, [provider, from, userAccount, chainId])
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    console.log("Swapping", amount, from, "to", to)
+  }
+
+  useEffect(() => {
+    calculateParaswapTx(from, to, amount)
+      .then(res => console.log(res))
+      .catch(e => console.error(e))
+  }, [from, amount, to])
+
   return (
     <section id="swap">
-      <form>
+      <form onSubmit={handleSubmit}>
         <section className="input-container">
           <InputForm amount={amount} setAmount={setAmount} userAccount={userAccount} from={from} setFrom={setFrom} handleMaxAmount={handleMaxAmount} />
           <OutputForm to={to} from={from} setTo={setTo} />

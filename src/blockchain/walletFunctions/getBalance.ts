@@ -2,7 +2,7 @@ import { Web3 } from "web3"
 import { EIP1193Provider } from "../../types/Metamask"
 import { Balance } from "../../types/blockchain"
 import { ABIS } from "../abis"
-import { etherToWeiConverter } from "../tokenHelper"
+import { weiToEtherConverter } from "../tokenHelper"
 import { tokenNameToAddress } from "../../utils/tokenNameToAddress"
 
 export const getBalance = async (provider: EIP1193Provider, tokenFromName: string, userAddress: string, chainId: string): Promise<Balance> => {
@@ -16,7 +16,7 @@ export const getBalance = async (provider: EIP1193Provider, tokenFromName: strin
     const contract = new web3.eth.Contract(ABIS.token, tokenAddress)
     const balance = ((await contract.methods.balanceOf(userAddress).call()) as BigInt).toString()
     const decimals: string = ((await contract.methods.decimals().call()) as BigInt).toString()
-    const ethBalance: string = etherToWeiConverter(balance, decimals)
+    const ethBalance: string = weiToEtherConverter(balance, decimals)
     return { weiBalance: balance, ethBalance }
   }
 }

@@ -1,3 +1,8 @@
+import { Web3 } from "web3"
+import { tokenNameToAddress } from "../../utils/tokenNameToAddress"
+import { ABIS } from "../abis"
+import { etherToWeiConverter } from "../tokenHelper"
+
 export interface GetParaswapPricesParams {
   fromAddress: string
   destAddress: string
@@ -25,5 +30,23 @@ export const getParaswapPrices = async ({ fromAddress, destAddress, amountWei, f
   const response = await fetch(url.toString())
   const data = await response.json()
   const priceRoute = data.priceRoute
+  return priceRoute
+}
+
+export const prepareDataForParaswapPrices = async (from: string, to: string, amountEth: string): Promise<GetParaswapPricesParams> => {
+  const fromAddress: string = tokenNameToAddress(from)
+  const destAddress: string = tokenNameToAddress(to)
+  const web3 = new Web3("https://binance.llamarpc.com")
+  const tokenFromContract = new web3.eth.Contract(ABIS.token, fromAddress)
+  const tokenToContract = new web3.eth.Contract(ABIS.token, destAddress)
+  const fromDecimals: string = (await tokenFromContract.methods.decimals().call() as BigInt).toString()
+  const destDecimals: string = (await tokenToContract.methods.decimals().call() as BigInt).toString()
+  const amountWei: string = etherToWeiConverter(amountEth, fromDecimals)
+  return { fromAddress,  destAddress, amountWei, fromDecimals, destDecimals }
+}
+
+export const calculateParaswapTx = async (from: string, to: string, amountEth: string) => {
+  const data: GetParaswapPricesParams = await prepareDataForParaswapPrices(from, to, amountEth)
+  const priceRoute = await getParaswapPrices(data)
   return priceRoute
 }
