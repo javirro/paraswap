@@ -3,6 +3,16 @@
 }
 
 :root{
-  --darkest: rgb(13, 13, 15);
-  --orange: rgb(254, 165, 0);
+  --blue50: #edfaff;
+  --blue100:#d6f3ff;
+  --blue200: #b5ecff;
+  --blue300: #83e2ff;
+  --blue400: #48cfff;
+  --blue500: #1eb1ff;
+  --blue600: #0694ff;
+  --blue700: #0080ff;
+  --blue800: #0861c5;
+  --blue900: #0d549b;
+  --blue950: #0e335d;
+
 }  

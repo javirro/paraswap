@@ -4,7 +4,7 @@ import { hexToDecimal } from "./utils/numberConversion"
 import DiscoverWalletProviders from "./components/DetectWallets/DetectWallets"
 
 import "./App.css"
-
+import Swap from "./components/Swap/Swap"
 
 function App() {
   const [provider, setProvider] = useState<EIP1193Provider>()
@@ -12,13 +12,13 @@ function App() {
   const [chainId, setChainId] = useState<string>("56")
   const [openWalletModal, setOpenWalletModal] = useState<boolean>(true)
   provider?.on?.("accountsChanged", (accounts: any) => {
-    setUserAccount(accounts[0]);
-  });
+    setUserAccount(accounts[0])
+  })
 
   provider?.on?.("chainChanged", (hexChainId: any) => {
-    const decChainId: string = hexToDecimal(hexChainId).toString();
-    setChainId(decChainId);
-  });
+    const decChainId: string = hexToDecimal(hexChainId).toString()
+    setChainId(decChainId)
+  })
 
   return (
     <div className="App">
@@ -31,8 +31,9 @@ function App() {
           chaindId={chainId}
         />
       )}
+      {provider && <Swap provider={provider} userAccount={userAccount} chainId={chainId} />}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

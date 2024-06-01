@@ -1,5 +1,5 @@
 import tokenList from '../../blockchain/tokenList.json'
-import './InputForm.css'
+import './Form.css'
 
 interface InputFormProps {
   chainId?: string
@@ -26,7 +26,7 @@ const InputForm = ({ amount, setAmount, userAccount, from, setFrom, handleMaxAmo
   }
 
   return (
-    <section id="input">
+    <section className='inputs'>
       <h4>From</h4>
       <div>
         <select onChange={handleFromChange}>

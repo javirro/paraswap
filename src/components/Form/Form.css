@@ -1,0 +1,107 @@
+@import url('/src/App.css');
+
+.inputs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.inputs h4 {
+  color: var(--blue200);
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: bold;
+  text-align: left;
+  width: 100%;
+  margin: 0;
+}
+
+.inputs div {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 40px;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.inputs select {
+  cursor: pointer;
+  width: 120px;
+  padding: 10px;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 2px solid var(--blue200);
+  background-color: transparent;
+  color: var(--blue200);
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: bold;
+}
+
+.inputs select option {
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 28px;
+  background-color: var(--blue950);
+  color: var(--blue200);
+}
+
+
+.inputs select:focus {
+  outline: none;
+}
+
+.inputs input[type="text"] {
+  width: 150px;
+  padding: 10px;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 2px solid var(--blue200);
+  background-color: transparent;
+  color: var(--blue200);
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: bold;
+}
+
+.inputs input[type="text"]::placeholder {
+  color: var(--blue200);
+}
+
+.inputs input[type="text"]:focus {
+  outline: none;
+}
+
+.inputs button {
+  padding: 10px;
+  box-sizing: border-box;
+  border: none;
+  background-color: var(--blue200);
+  color:  var(--blue950);
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 28px;
+  cursor: pointer;
+}
+
+.inputs .max {
+  padding: 10px;
+  border-radius: 4px;
+}
+.inputs .max:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.inputs .preview {
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 28px;
+  color:  var(--blue400);
+  opacity: 0.5;
+}

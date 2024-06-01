@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
 import { Balance } from "../../types/blockchain"
-import InputForm from "../InputForm/InputForm"
+import InputForm from "../Form/InputForm"
 import { EIP1193Provider } from "../../types/Metamask"
 import { getBalance } from "../../blockchain/walletFunctions/getBalance"
 import "./Swap.css"
+import OutputForm from "../Form/OutputForm"
 
 interface SwapProps {
   provider: EIP1193Provider
@@ -29,10 +30,15 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
       })
   }, [provider, from, userAccount, chainId])
 
-  
   return (
     <section id="swap">
-      <InputForm amount={amount} setAmount={setAmount} userAccount={userAccount} from={from} setFrom={setFrom} handleMaxAmount={handleMaxAmount} />
+      <form>
+        <section className="input-container">
+          <InputForm amount={amount} setAmount={setAmount} userAccount={userAccount} from={from} setFrom={setFrom} handleMaxAmount={handleMaxAmount} />
+          <OutputForm to={to} from={from} setTo={setTo} />
+        </section>
+        <button type="submit">SWAP</button>
+      </form>
     </section>
   )
 }
