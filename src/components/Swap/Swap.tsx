@@ -35,10 +35,12 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
   useEffect(() => {
     setError(undefined)
     setAmount("0")
+    setPreview("Estimating amount ....")
   }, [from])
 
   useEffect(() => {
     setError(undefined)
+    setPreview("Estimating amount ....")
   }, [to])
 
   useEffect(() => {
@@ -102,7 +104,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
         const destDecimals = res?.destDecimals
         const destAmountWei = res?.destAmount
         if (!destDecimals || !destAmountWei) return
-        setPreview(weiToEtherConverter(destAmountWei, destDecimals))
+        setPreview(parseFloat(weiToEtherConverter(destAmountWei, destDecimals.toString())).toFixed(6))
       })
       .catch(e => {
         console.error(e)
