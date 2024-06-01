@@ -7,7 +7,7 @@ import OutputForm from "../Form/OutputForm"
 import { calculateParaswapTx } from "../../blockchain/paraswap/getPrices"
 import { weiToEtherConverter } from "../../blockchain/tokenHelper"
 import { approveToken, getAllowance } from "../../blockchain/approveAllowance"
-import sendTransaction, { SendTransactionParams, swapWithParaswap } from "../../blockchain/paraswap/sendTransaction"
+import BuildTxData, { SendTransactionParams, swapWithParaswap } from "../../blockchain/paraswap/sendTransaction"
 import { TransactionReceipt } from "web3"
 
 import "./Swap.css"
@@ -84,7 +84,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
         priceRoute,
         slippage: 250,
       }
-      txInfo = await sendTransaction(txParams)
+      txInfo = await BuildTxData(txParams)
     } catch (error) {
       console.error("Error getting data for tx", error)
       setError(ErrorType.buildTx)
@@ -92,7 +92,6 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
     }
 
     try {
-      
       const tx: TransactionReceipt = await swapWithParaswap(txInfo, provider)
       setTxHash(tx.transactionHash.toString())
     } catch (error) {
@@ -135,7 +134,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
         {txHash && txHash !== "" && (
           <section className="tx-hash">
             <a href={`https://bscscan.com/tx/${txHash}`} target="_blank" rel="noreferrer">
-                  Explore transaction in BSCSCAN
+              Explore transaction in BSCSCAN
             </a>
           </section>
         )}

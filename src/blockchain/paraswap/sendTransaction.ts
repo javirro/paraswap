@@ -8,7 +8,7 @@ export interface SendTransactionParams extends GetParaswapPricesParams {
   priceRoute: any
   slippage: number
 }
-const SendTransaction = async ({
+const BuildTxData = async ({
   fromAddress,
   destAddress,
   amountWei,
@@ -44,7 +44,7 @@ const SendTransaction = async ({
   return data
 }
 
-export default SendTransaction
+export default BuildTxData
 
 export const swapWithParaswap = async (txInfo: TxInfoParaswap, provider: EIP1193Provider) => {
   const web3 = new Web3(provider)
