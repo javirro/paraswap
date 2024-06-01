@@ -59,3 +59,10 @@
   line-height: 28px;
   font-weight: 600;
 }
+
+#swap a {
+  color: var(--blue300);
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: bold;
+}

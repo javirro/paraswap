@@ -126,9 +126,8 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
         </button>
         {txHash && txHash !== "" && (
           <section className="tx-hash">
-            <p>Transaction Hash:</p>
             <a href={`https://bscscan.com/tx/${txHash}`} target="_blank" rel="noreferrer">
-              {txHash}
+                  Explore transaction in BSCSCAN
             </a>
           </section>
         )}
