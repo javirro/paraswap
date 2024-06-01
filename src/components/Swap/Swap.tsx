@@ -56,15 +56,17 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
     const spender: string = priceRoute.tokenTransferProxy
     const srcToken: string = priceRoute.srcToken
     const amountWei: string = priceRoute.srcAmount
-    try {
-      const allowance: string = await getAllowance(provider, userAccount, spender, srcToken)
-      if (BigInt(allowance) < BigInt(amountWei)) {
-        await approveToken(provider, userAccount, spender, amountWei, srcToken)
+    if (from !== "bnb") {
+      try {
+        const allowance: string = await getAllowance(provider, userAccount, spender, srcToken)
+        if (BigInt(allowance) < BigInt(amountWei)) {
+          await approveToken(provider, userAccount, spender, amountWei, srcToken)
+        }
+      } catch (error) {
+        console.error("Error approving token", error)
+        setError(ErrorType.approve)
+        return
       }
-    } catch (error) {
-      console.error("Error approving token", error)
-      setError(ErrorType.approve)
-      return
     }
 
     let txInfo
