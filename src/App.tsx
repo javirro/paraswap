@@ -2,9 +2,10 @@ import { useState } from "react"
 import { EIP1193Provider } from "./types/Metamask"
 import { hexToDecimal } from "./utils/numberConversion"
 import DiscoverWalletProviders from "./components/DetectWallets/DetectWallets"
+import Swap from "./components/Swap/Swap"
 
 import "./App.css"
-import Swap from "./components/Swap/Swap"
+
 
 function App() {
   const [provider, setProvider] = useState<EIP1193Provider>()

@@ -5,8 +5,46 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  gap: 25px;
+  width: 100%;
+}
+
+.inputs .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 10px;
   width: 100%;
+}
+.inputs .header .slippage {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+.inputs .header .slippage span {
+  color: var(--blue200);
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: bold;
+}
+
+.inputs .header .slippage input[type="number"] {
+  width: 50px;
+  padding: 4px;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 1px solid var(--blue200);
+  background-color: transparent;
+  color: var(--blue200);
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: bold;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  -webkit-appearance: textfield;
 }
 
 .inputs h4 {

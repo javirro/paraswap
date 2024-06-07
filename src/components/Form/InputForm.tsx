@@ -1,5 +1,5 @@
-import tokenList from '../../blockchain/tokenList.json'
-import './Form.css'
+import tokenList from "../../blockchain/tokenList.json"
+import "./Form.css"
 
 interface InputFormProps {
   chainId?: string
@@ -9,9 +9,11 @@ interface InputFormProps {
   from: string
   setFrom: (from: string) => void
   handleMaxAmount: Function
+  slippage: number
+  setSlippage: (slippage: number) => void
 }
-const InputForm = ({ amount, setAmount, userAccount, from, setFrom, handleMaxAmount }: InputFormProps) => {
-  const tokensNames: string[] =  tokenList.map(t => t.id)
+const InputForm = ({ amount, setAmount, userAccount, from, setFrom, handleMaxAmount, slippage, setSlippage }: InputFormProps) => {
+  const tokensNames: string[] = tokenList.map(t => t.id)
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -25,9 +27,21 @@ const InputForm = ({ amount, setAmount, userAccount, from, setFrom, handleMaxAmo
     setFrom(value.toLowerCase())
   }
 
+  const handleSlippageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(e.target.value)
+    setSlippage(value)
+  }
+
   return (
-    <section className='inputs'>
-      <h4>From</h4>
+    <section className="inputs">
+      <div className="header">
+        <h4>From</h4>
+        <div className="slippage">
+          <span> (%) Slippage</span>
+          <input type="number" placeholder="0.5" min={0.1} step={0.1} max={10} value={slippage} onChange={handleSlippageChange}/>
+        </div>
+      </div>
+
       <div>
         <select onChange={handleFromChange}>
           {tokensNames.map(t => (

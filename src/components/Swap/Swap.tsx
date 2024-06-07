@@ -9,9 +9,9 @@ import { weiToEtherConverter } from "../../blockchain/tokenHelper"
 import { approveToken, getAllowance } from "../../blockchain/approveAllowance"
 import BuildTxData, { SendTransactionParams, swapWithParaswap } from "../../blockchain/paraswap/sendTransaction"
 import { TransactionReceipt } from "web3"
+import { TxInfoParaswap } from "../../types/paraswap"
 
 import "./Swap.css"
-import { TxInfoParaswap } from "../../types/paraswap"
 
 interface SwapProps {
   provider: EIP1193Provider
@@ -24,10 +24,12 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
   const [amount, setAmount] = useState<string>("")
   const [from, setFrom] = useState<string>("bnb")
   const [to, setTo] = useState<string>("usdt")
-  const [preview, setPreview] = useState<string>("Estimating amount ....")
+  const [preview, setPreview] = useState<string>("0")
   const [priceRoute, setPriceRoute] = useState<any>(undefined)
   const [txHash, setTxHash] = useState<string>("")
   const [error, setError] = useState<ErrorType | undefined>(undefined)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [slippage, setSlippage] = useState<number>(0.5)
 
   const handleMaxAmount = () => {
     setAmount(balance?.ethBalance)
@@ -36,7 +38,8 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
   useEffect(() => {
     setError(undefined)
     setAmount("0")
-    setPreview("Estimating amount ....")
+    setPreview
+    ("Estimating amount ....")
     setTxHash("")
   }, [from])
 
@@ -56,6 +59,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
   }, [provider, from, userAccount, chainId])
 
   const sendTx = async () => {
+    setLoading(true)
     const spender: string = priceRoute.tokenTransferProxy
     const srcToken: string = priceRoute.srcToken
     const amountWei: string = priceRoute.srcAmount
@@ -68,6 +72,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
       } catch (error) {
         console.error("Error approving token", error)
         setError(ErrorType.approve)
+        setLoading(false)
         return
       }
     }
@@ -82,12 +87,13 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
         fromDecimals: priceRoute.srcDecimals,
         destDecimals: priceRoute.destDecimals,
         priceRoute,
-        slippage: 250,
+        slippage: slippage * 100,
       }
       txInfo = await BuildTxData(txParams)
     } catch (error) {
       console.error("Error getting data for tx", error)
       setError(ErrorType.buildTx)
+      setLoading(false)
       return
     }
 
@@ -99,6 +105,7 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
       console.error("Error sending transaction", error)
       return
     } finally {
+      setLoading(false)
       setPriceRoute(undefined)
       setAmount("0")
       setPreview("0")
@@ -125,11 +132,11 @@ const Swap = ({ provider, userAccount, chainId }: SwapProps) => {
     <section id="swap">
       <section className="form-container">
         <section className="input-container">
-          <InputForm amount={amount} setAmount={setAmount} userAccount={userAccount} from={from} setFrom={setFrom} handleMaxAmount={handleMaxAmount} />
+          <InputForm amount={amount} setAmount={setAmount} userAccount={userAccount} from={from} setFrom={setFrom} handleMaxAmount={handleMaxAmount} slippage={slippage} setSlippage={setSlippage} />
           <OutputForm to={to} from={from} setTo={setTo} preview={preview} />
         </section>
-        <button className="swap-btn" onClick={sendTx} disabled={!priceRoute}>
-          SWAP
+        <button className="swap-btn" onClick={sendTx} disabled={!priceRoute || loading}>
+          {loading ? "Swapping..." : "Swap"}
         </button>
         {txHash && txHash !== "" && (
           <section className="tx-hash">
