@@ -26,6 +26,7 @@ function App() {
       {openWalletModal && (
         <DiscoverWalletProviders
           setOpenWalletModal={setOpenWalletModal}
+          provider={provider as EIP1193Provider}
           setProvider={setProvider}
           setUserAccount={setUserAccount}
           userAccount={userAccount}

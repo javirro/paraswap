@@ -13,5 +13,5 @@ export const getWalletAccounts = async (provider: EIP1193Provider): Promise<stri
 
 export const switchChain = async (provider: EIP1193Provider, chainId: string): Promise<void> => {
   const hexSelectedChainId: string = decimalToHex(+chainId)
-  await provider.request({ method: "wallet_switchEthereumChain", params: [{ chainId: "0x" + hexSelectedChainId }] })
+  await provider.request({ method: "wallet_switchEthereumChain", params: [{ chainId:  hexSelectedChainId }] })
 }

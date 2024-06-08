@@ -64,3 +64,29 @@
   font-weight: bold;
   color: var(--blue950);
 }
+
+.wallets-detection .change-div {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+.wallets-detection .change-div .wrong {
+  font-size: 16px;
+  font-weight: bold;
+  color: red;
+}
+
+.wallets-detection .change-div button {
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: transparent;
+  border: 2px solid red;
+  border-radius: 5px;
+  color: red;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
